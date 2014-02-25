@@ -29,7 +29,7 @@ message("** SDL Libraries: ${SDL2_LIBRARY_DIR}")
 message("** SDL Libraries: ${SDL2_LIBRARIES}")
 link_directories(/usr/local/lib)
 
-add_executable (md2view main.cpp)
+add_executable (md2view main.cpp Application.cpp Program.cpp MD2.cpp)
 
 target_link_libraries (md2view
 	${Boost_SYSTEM_LIBRARY}

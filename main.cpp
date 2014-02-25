@@ -2,10 +2,11 @@
 
 #include <iostream>
 
+#include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 #include <boost/program_options/errors.hpp>
 
-#include <SDL2/SDL.h>
+#include "Application.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace bpo = boost::program_options;
@@ -32,5 +33,12 @@ int main(int argc, char** argv)
 
 		return 1;
 	}
+
+	MD2View::ApplicationContext ctx;
+	MD2View::Application app {ctx};
+
+	app.init();
+
+	return app.execute();
 }
 //----------------------------------------------------------------------------------------------------
