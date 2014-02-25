@@ -4,9 +4,10 @@
 #define _APPLICATION_HPP_0B6EB8A0ECDDA4E0A05448A88CC104B8
 //----------------------------------------------------------------------------------------------------
 
+#include <memory>
 #include <string>
 
-#include <boost/optional.hpp>
+#include <SDL2/SDL.h>
 
 #include "MD2_fwd.hpp"
 #include "Program_fwd.hpp"
@@ -35,14 +36,18 @@ struct ApplicationContext
 class Application
 {
 public:
-	Application(const ApplicationContext& ctx)
-		: context {ctx}
-	{ }
+	Application(const ApplicationContext& ctx);
 
 	void init();
-	int execute();
+	int execute() noexcept;
 
 private:
+	void loop();
+
+	typedef std::unique_ptr<SDL_Window, void (*)(SDL_Window*)> WindowPtr;
+	WindowPtr window;
+	SDL_GLContext glContext;
+
 	ApplicationContext context;
 };
 //----------------------------------------------------------------------------------------------------
