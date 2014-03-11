@@ -1,5 +1,6 @@
 //----------------------------------------------------------------------------------------------------
 
+#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -7,6 +8,7 @@
 #include <boost/program_options/errors.hpp>
 
 #include "Application.hpp"
+#include "MD2.hpp"
 #include "Program.hpp"
 //----------------------------------------------------------------------------------------------------
 
@@ -21,7 +23,20 @@ MD2View::ProgramPtr readProgram(const std::string& vFile, const std::string& fFi
 
 MD2View::MD2Ptr readModel(const std::string& file)
 {
-	return MD2View::MD2Ptr();
+	using namespace MD2View;
+
+	MD2Ptr md2 {new MD2()};
+
+	std::ifstream md2stream;
+
+	md2stream.open(file);
+
+	if (!md2stream.is_open())
+		throw std::runtime_error("model file opening failed!");
+
+	md2stream >> *md2;
+
+	return md2;
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -34,7 +49,7 @@ int main(int argc, char** argv)
 		("model", bpo::value<std::string>(), "model")
 		("vertex", bpo::value<std::string>(), "vertex shader")
 		("fragment", bpo::value<std::string>(), "fragment shader")
-		("input-files", bpo::value<std::vector<std::string>>(), "input files")
+		("input-files", bpo::value<std::string>(), "input files")
 		("help", "help message");
 
 	bpo::positional_options_description pos;
@@ -58,7 +73,7 @@ int main(int argc, char** argv)
 		MD2View::ApplicationContext ctx;
 
 		if (vm.count("input-files"))
-			ctx.model = readModel(vm["input-files"].as<std::vector<std::string>>()[0]);
+			ctx.model = readModel(vm["input-files"].as<std::string>());
 		else
 			throw std::runtime_error("model file is not specified!");
 

@@ -1,48 +1,24 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _FRUSTUM_FWD_HPP_91D9D70756D614BE47AA2B97220ACAC1
+#define _FRUSTUM_FWD_HPP_91D9D70756D614BE47AA2B97220ACAC1
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
-
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include <memory>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
-{
-public:
-	Program(const std::string& vStr, const std::string& fStr);
+class Frustum;
+//----------------------------------------------------------------------------------------------------
 
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
-
-private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
-};
+typedef std::shared_ptr<Frustum> FrustumPtr;
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _FRUSTUM_FWD_HPP_91D9D70756D614BE47AA2B97220ACAC1
 //----------------------------------------------------------------------------------------------------

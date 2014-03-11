@@ -9,8 +9,11 @@
 
 #include <SDL2/SDL.h>
 
+#include "Camera.hpp"
+#include "Frustum.hpp"
 #include "MD2_fwd.hpp"
 #include "Program_fwd.hpp"
+#include "Renderer.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
@@ -39,16 +42,32 @@ public:
 	Application(const ApplicationContext& ctx);
 
 	void init();
-	int execute() noexcept;
+	int execute();
 
 private:
-	void loop();
+	void start();
+	void processInput();
+	void integrate();
+	void display();
+	void shutdown();
+
+	void breakLoop();
+	void onKeyDown(SDL_Keycode key);
+	void onKeyUp(SDL_Keycode key);
 
 	typedef std::unique_ptr<SDL_Window, void (*)(SDL_Window*)> WindowPtr;
+
 	WindowPtr window;
 	SDL_GLContext glContext;
-
 	ApplicationContext context;
+	bool running {true};
+
+	Frustum frustum;
+	Camera camera;
+	Renderer renderer;
+
+	Object object;
+	Matrix4<float> mvpMatrix;
 };
 //----------------------------------------------------------------------------------------------------
 

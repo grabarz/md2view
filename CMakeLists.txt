@@ -29,7 +29,15 @@ message("** SDL Libraries: ${SDL2_LIBRARY_DIR}")
 message("** SDL Libraries: ${SDL2_LIBRARIES}")
 link_directories(/usr/local/lib)
 
-add_executable (md2view main.cpp Application.cpp Program.cpp MD2.cpp)
+add_executable (md2view
+	main.cpp
+	Application.cpp
+	Frustum.cpp
+	Camera.cpp
+	Program.cpp
+	Renderer.cpp
+	MD2.cpp
+	Model.cpp)
 
 target_link_libraries (md2view
 	${Boost_SYSTEM_LIBRARY}
@@ -37,3 +45,19 @@ target_link_libraries (md2view
 	${SDL2_LIBRARY_DIR}
 	${SDL2_LIBRARIES}
 	${OPENGL_LIBRARIES})
+
+add_library (md2view_tests SHARED
+	tests/ComparatorTests.cpp
+	tests/FloatTests.cpp
+	tests/Vector3Tests.cpp
+	tests/Vector4Tests.cpp
+	tests/Matrix4Tests.cpp)
+
+target_link_libraries (md2view_tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+
+add_executable (tests tests/tests.cpp)
+
+target_link_libraries (tests ${Boost_SYSTEM_LIBRARY} md2view_tests)
+
+enable_testing ()
+add_test (UnitTests tests)

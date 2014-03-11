@@ -1,48 +1,28 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _MODEL_FWD_HPP_452F0786B4E145A1E4197D7B0607B50C
+#define _MODEL_FWD_HPP_452F0786B4E145A1E4197D7B0607B50C
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
-
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include <memory>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
-{
-public:
-	Program(const std::string& vStr, const std::string& fStr);
+struct Frame;
+struct Animation;
+struct Model;
+//----------------------------------------------------------------------------------------------------
 
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
-
-private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
-};
+typedef std::shared_ptr<Frame> MeshPtr;
+typedef std::shared_ptr<Animation> AnimationPtr;
+typedef std::shared_ptr<Model> ModelPtr;
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _MODEL_FWD_HPP_452F0786B4E145A1E4197D7B0607B50C
 //----------------------------------------------------------------------------------------------------

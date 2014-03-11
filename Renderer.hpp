@@ -1,48 +1,42 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
+#include "Renderer_fwd.hpp"
 
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include "Matrix4_fwd.hpp"
+#include "MD2_fwd.hpp"
+#include "Model.hpp"
+#include "Program.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
+class Renderer
 {
 public:
-	Program(const std::string& vStr, const std::string& fStr);
+	Renderer();
 
-	void compile();
+	void load(const std::string& name, const MD2& md2);
+	ModelPtr getModel(const std::string& name);
 
-	void load();
-	void unload();
+	void begin();
+	void end();
 
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
+	void initProgram(Program& prog);
+	void render(Program& prog, const Matrix4<float>& mat, const Frame& frame);
 
 private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
+	std::map<std::string, ModelPtr> models;
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
 //----------------------------------------------------------------------------------------------------

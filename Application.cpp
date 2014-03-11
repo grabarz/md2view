@@ -4,7 +4,29 @@
 
 #include <exception>
 
+#include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
+
+#include "Program.hpp"
+//----------------------------------------------------------------------------------------------------
+
+namespace
+{
+//----------------------------------------------------------------------------------------------------
+
+std::string getDefaultVertexShader()
+{
+	return "";
+}
+//----------------------------------------------------------------------------------------------------
+
+std::string getDefaultFragmentShader()
+{
+	return "";
+}
+//----------------------------------------------------------------------------------------------------
+
+} // namespace
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
@@ -12,6 +34,7 @@ namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
 ApplicationContext::ApplicationContext()
+	: program {new Program {getDefaultVertexShader(), getDefaultFragmentShader()}}
 {
 }
 //----------------------------------------------------------------------------------------------------
@@ -19,7 +42,10 @@ ApplicationContext::ApplicationContext()
 Application::Application(const ApplicationContext& ctx)
 	: context {ctx}
 	, window {nullptr, SDL_DestroyWindow}
+	, camera {{1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}}
+	, mvpMatrix {0.0}
 {
+	
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -42,15 +68,107 @@ void Application::init()
 }
 //----------------------------------------------------------------------------------------------------
 
-void Application::loop()
+int Application::execute()
 {
-	
+	start();
+
+	while (running)
+	{
+		processInput();
+		integrate();
+		display();
+	}
+
+	shutdown();
+
+	return 0;
 }
 //----------------------------------------------------------------------------------------------------
 
-int Application::execute() noexcept
+void Application::start()
 {
-	return 0;
+	context.program->compile();
+
+	renderer.initProgram(*context.program);
+
+	// load objects
+	renderer.load("Object", *context.model);
+
+	object.model = renderer.getModel("Object");
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::processInput()
+{
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+			case SDL_KEYDOWN:
+				onKeyDown(event.key.keysym.sym);
+				break;
+			case SDL_KEYUP:
+				onKeyUp(event.key.keysym.sym);
+				break;
+			case SDL_QUIT:
+				breakLoop();
+				break;
+		}
+	}
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::integrate()
+{
+	mvpMatrix = Matrix4<float>::multiply(camera.getMatrix(), frustum.getMatrix());
+
+	double dt = 0.0;
+
+	camera.update(dt);
+	frustum.update(dt);
+	object.update(dt);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::display()
+{
+	renderer.begin();
+	renderer.render(*context.program, mvpMatrix, object.getFrame());
+	renderer.end();
+
+	SDL_GL_SwapWindow(window.get());
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::breakLoop()
+{
+	running = false;
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::onKeyDown(SDL_Keycode key)
+{
+	switch (key)
+	{
+		case SDLK_ESCAPE:
+			breakLoop();
+			break;
+	}
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::onKeyUp(SDL_Keycode key)
+{
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::shutdown()
+{
+	SDL_GL_DeleteContext(glContext);
+	window.reset();
+	SDL_Quit();
 }
 //----------------------------------------------------------------------------------------------------
 

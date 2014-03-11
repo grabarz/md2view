@@ -1,48 +1,24 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _RENDERER_FWD_HPP_2373469BA3AB113C4D4F27EEE7BB872C
+#define _RENDERER_FWD_HPP_2373469BA3AB113C4D4F27EEE7BB872C
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
-
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include <memory>
 //----------------------------------------------------------------------------------------------------
 
-namespace MD2View
+namespace Renderer
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
-{
-public:
-	Program(const std::string& vStr, const std::string& fStr);
-
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
-
-private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
-};
+class Renderer;
 //----------------------------------------------------------------------------------------------------
 
-} // namespace MD2View
+typedef std::shared_ptr<Renderer> RendererPtr;
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+} // namespace Renderer
+//----------------------------------------------------------------------------------------------------
+
+#endif // _RENDERER_FWD_HPP_2373469BA3AB113C4D4F27EEE7BB872C
 //----------------------------------------------------------------------------------------------------

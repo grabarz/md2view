@@ -1,48 +1,39 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
+#define _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
+#include "Camera_fwd.hpp"
 
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include "Frustum.hpp"
+#include "Matrix4.hpp"
+#include "Vector3.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
+class Camera
 {
 public:
-	Program(const std::string& vStr, const std::string& fStr);
+	Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector3<float>& u);
 
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
+	void update(double dt);
+	const Matrix4<float>& getMatrix() const;
 
 private:
-	std::string vShader;
-	std::string fShader;
+	Vector3<float> position;
+	Vector3<float> direction;
+	Vector3<float> up;
 
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
+	Matrix4<float> matrix;
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
 //----------------------------------------------------------------------------------------------------

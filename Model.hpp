@@ -1,44 +1,63 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _MD2_HPP_5E2BB955D8D82CAB6B2B26F7369E298C
-#define _MD2_HPP_5E2BB955D8D82CAB6B2B26F7369E298C
+#ifndef _MODEL_HPP_B1C1300B15B30290444BBD943D016431
+#define _MODEL_HPP_B1C1300B15B30290444BBD943D016431
 //----------------------------------------------------------------------------------------------------
 
-#include "MD2_fwd.hpp"
+#include "Model_fwd.hpp"
 
-#include <istream>
 #include <map>
 #include <string>
 #include <vector>
 
-#include "Vector3.hpp"
+#include <OpenGL/gl3.h>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-std::istream& operator>>(std::istream& stream, MD2& m);
+// Descriptors of loaded objects
 //----------------------------------------------------------------------------------------------------
 
-struct MD2
+struct Frame
 {
-	struct Frame
-	{
-		std::vector<Vector3<float>> vertices; // uncompressed
-		std::vector<Vector3<float>> normals; // uncompressed
-	};
-
-	std::vector<Frame> frames;
-	
-	bool empty() const;
-
-	friend std::istream& operator>>(std::istream& stream, MD2& m);
+	GLuint vao;
+	GLsizei size;
 };
+//----------------------------------------------------------------------------------------------------
+
+struct Model
+{
+	std::vector<Frame> frames;
+	// textures
+};
+//----------------------------------------------------------------------------------------------------
+
+struct Object
+{
+	ModelPtr model;
+
+	void update(double dt);
+
+	const Frame& getFrame();
+
+	void play();
+	void pause();
+
+	void nextFrame();
+	void prevFrame();
+
+	void nextAnimation();
+	void prevAnimation();
+};
+//----------------------------------------------------------------------------------------------------
+
+
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _MD2_HPP_5E2BB955D8D82CAB6B2B26F7369E298C
+#endif // _MODEL_HPP_B1C1300B15B30290444BBD943D016431
 //----------------------------------------------------------------------------------------------------

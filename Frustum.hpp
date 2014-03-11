@@ -1,48 +1,33 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _FRUSTUM_HPP_9EF95D7F38B75DA5C42325F396416D10
+#define _FRUSTUM_HPP_9EF95D7F38B75DA5C42325F396416D10
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
+#include "Frustum_fwd.hpp"
 
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include "Matrix4.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
+class Frustum
 {
 public:
-	Program(const std::string& vStr, const std::string& fStr);
+	Frustum();
 
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
+	void update(double dt);
+	const Matrix4<float>& getMatrix() const;
 
 private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
+	Matrix4<float> matrix;
 };
 //----------------------------------------------------------------------------------------------------
 
-} // namespace MD2View
+} // namespace DasModel
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _FRUSTUM_HPP_9EF95D7F38B75DA5C42325F396416D10
 //----------------------------------------------------------------------------------------------------

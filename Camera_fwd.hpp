@@ -1,48 +1,24 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
-#define _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#ifndef _CAMERA_FWD_HPP_F6B86FCE7F0A412B91780C11FCB9BA1F
+#define _CAMERA_FWD_HPP_F6B86FCE7F0A412B91780C11FCB9BA1F
 //----------------------------------------------------------------------------------------------------
 
-#include "Program_fwd.hpp"
-
-#include <map>
-#include <string>
-
-#include <OpenGL/gl3.h>
+#include <memory>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Program
-{
-public:
-	Program(const std::string& vStr, const std::string& fStr);
+class Camera;
+//----------------------------------------------------------------------------------------------------
 
-	void compile();
-
-	void load();
-	void unload();
-
-	void addUniform(const std::string& uniform);
-
-	template <typename T>
-	void setUniform(const std::string& uniform, const T& val);
-
-private:
-	std::string vShader;
-	std::string fShader;
-
-	GLuint program;
-
-	std::map<std::string, GLuint> uniforms;
-};
+typedef std::shared_ptr<Camera> CameraPtr;
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _PROGRAM_HPP_1108B19E5032E870B480E495BAA19C77
+#endif // _CAMERA_FWD_HPP_F6B86FCE7F0A412B91780C11FCB9BA1F
 //----------------------------------------------------------------------------------------------------
