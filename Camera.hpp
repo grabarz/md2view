@@ -28,7 +28,11 @@ private:
 	Vector3<float> direction;
 	Vector3<float> up;
 
+	void updateMatrix();
+
 	Matrix4<float> matrix;
+	Matrix4<float> orientation;
+	Matrix4<float> translation;
 };
 //----------------------------------------------------------------------------------------------------
 

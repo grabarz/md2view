@@ -16,12 +16,23 @@ namespace MD2View
 class Frustum
 {
 public:
+	Frustum(float l, float r, float t, float b, float n, float f);
+	Frustum(float width, float height, float n, float f);
 	Frustum();
 
 	void update(double dt);
 	const Matrix4<float>& getMatrix() const;
 
 private:
+	void updateMatrix();
+
+	float left;
+	float right;
+	float top;
+	float bottom;
+	float near;
+	float far;
+
 	Matrix4<float> matrix;
 };
 //----------------------------------------------------------------------------------------------------

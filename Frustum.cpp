@@ -7,14 +7,33 @@ namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
+Frustum::Frustum(float l, float r, float t, float b, float n, float f)
+	: left(l)
+	, right(r)
+	, top(t)
+	, bottom(b)
+	, near(n)
+	, far(f)
+	, matrix {0.0}
+{
+}
+//----------------------------------------------------------------------------------------------------
+
+Frustum::Frustum(float width, float height, float n, float f)
+	: Frustum(-width / 2.0, width / 2.0, -height / 2.0, height / 2.0, n, f)
+{
+}
+//----------------------------------------------------------------------------------------------------
+
 Frustum::Frustum()
-	: matrix {0.0}
+	: Frustum(10.0, 10.0, 1.0, 20.0)
 {
 }
 //----------------------------------------------------------------------------------------------------
 
 void Frustum::update(double dt)
 {
+	updateMatrix();
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -24,6 +43,16 @@ const Matrix4<float>& Frustum::getMatrix() const
 }
 //----------------------------------------------------------------------------------------------------
 
+void Frustum::updateMatrix()
+{
+	matrix[At<4>(0, 0)] = 2.0 * near / (right - left);
+	matrix[At<4>(1, 1)] = 2.0 * near / (top - bottom);
+	matrix[At<4>(0, 2)] = (right + left) / (right - left);
+	matrix[At<4>(1, 2)] = (top + bottom) / (top - bottom);
+	matrix[At<4>(2, 2)] = -(far + near) / (far - near);
+	matrix[At<4>(3, 2)] = -1.0;
+	matrix[At<4>(2, 3)] = -(2 * far * near) / (far - near);
+}
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
