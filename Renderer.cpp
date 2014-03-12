@@ -32,8 +32,6 @@ void Renderer::load(const std::string& name, const MD2& md2)
 
 	for (const auto& frame : md2.frames)
 	{
-//		model->size = frame.vertices.size();
-
 		GLuint vbuff, nbuff;
 
 		glGenBuffers(1, &vbuff);
@@ -42,12 +40,17 @@ void Renderer::load(const std::string& name, const MD2& md2)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glGenBuffers(1, &nbuff);
-		glBindBuffer(GL_ARRAY_BUFFER, vbuff);
+		glBindBuffer(GL_ARRAY_BUFFER, nbuff);
 		glBufferData(GL_ARRAY_BUFFER, frame.normals.size(), frame.normals.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		Frame f;
+
+		f.vao = 0;
+		f.size = frame.vertices.size();
+
+		model->frames.push_back(f);
 	}
-	// model->vao;
-	// model->size;
 
 	models[name] = model;
 }
