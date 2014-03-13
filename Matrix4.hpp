@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------------
 
 #include <cassert>
+#include <ostream>
 
 #include "At.hpp"
 #include "Float.hpp"
@@ -54,6 +55,16 @@ public:
 		tab[4] = m.tab[4]; tab[5] = m.tab[5]; tab[6] = m.tab[6]; tab[7] = m.tab[7];
 		tab[8] = m.tab[8]; tab[9] = m.tab[9]; tab[10] = m.tab[10]; tab[11] = m.tab[11];
 		tab[12] = m.tab[12]; tab[13] = m.tab[13]; tab[14] = m.tab[14]; tab[15] = m.tab[15];
+	}
+
+	const T* data() const
+	{
+		return &tab[0];
+	}
+
+	T* data()
+	{
+		return &tab[0];
 	}
 
 	static Matrix4<T, V4> fromColumns(
@@ -418,6 +429,28 @@ public:
 		return a;
 	}
 };
+//----------------------------------------------------------------------------------------------------
+
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, const Matrix4<T>& matrix)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		stream << "[";
+
+		for (int j = 0; j < 4; ++j)
+		{
+			stream << matrix.at(i, j);
+
+			if (j != 3)
+				stream << ", ";
+		}
+
+		stream << "]" << std::endl;
+	}
+
+	return stream;
+}
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View

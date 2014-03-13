@@ -10,8 +10,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
-#include "Vector3.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
@@ -23,14 +21,11 @@ std::istream& operator>>(std::istream& stream, MD2& m);
 
 struct MD2
 {
-	struct Frame
-	{
-		std::vector<Vector3<float>> vertices; // uncompressed
-		std::vector<Vector3<float>> normals; // uncompressed
-	};
+	std::vector<float> data; // vertices, normals
 
-	std::vector<Frame> frames;
-	
+	std::size_t triangles;
+	std::size_t frames;
+
 	bool empty() const;
 
 	friend std::istream& operator>>(std::istream& stream, MD2& m);

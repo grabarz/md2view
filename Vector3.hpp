@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <cmath>
+#include <ostream>
 
 #include "Float.hpp"
 #include "Vector3_fwd.hpp"
@@ -171,6 +172,15 @@ public:
 			u.vec[0] * v.vec[1] - u.vec[1] * v.vec[0]);
 	}
 };
+//----------------------------------------------------------------------------------------------------
+
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, const Vector3<T>& vec)
+{
+	stream << "[" << vec[0] << ", " << vec[1] << ", " << vec[2] << "]";
+
+	return stream;
+}
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View

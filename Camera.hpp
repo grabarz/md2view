@@ -23,11 +23,11 @@ public:
 	void update(double dt);
 	const Matrix4<float>& getMatrix() const;
 
-private:
 	Vector3<float> position;
 	Vector3<float> direction;
 	Vector3<float> up;
 
+private:
 	void updateMatrix();
 
 	Matrix4<float> matrix;

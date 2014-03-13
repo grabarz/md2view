@@ -6,7 +6,6 @@
 
 #include "Model_fwd.hpp"
 
-#include <map>
 #include <string>
 #include <vector>
 
@@ -22,8 +21,8 @@ namespace MD2View
 
 struct Frame
 {
-	GLuint vao;
-	GLsizei size;
+	GLuint vao; // VAO
+	GLsizei triangles; // number of triangles
 };
 //----------------------------------------------------------------------------------------------------
 

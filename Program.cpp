@@ -2,6 +2,8 @@
 
 #include "Program.hpp"
 
+#include <boost/format.hpp>
+
 #include "Matrix4.hpp"
 //----------------------------------------------------------------------------------------------------
 
@@ -22,7 +24,16 @@ GLuint makeShader(GLenum type, const std::string& source)
 
 	if (status == GL_FALSE)
 	{
-		throw std::runtime_error("shader compilation error!");
+		GLint len;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
+		GLchar *str = new GLchar[len + 1];
+		glGetShaderInfoLog(shader, len, NULL, str);
+
+		boost::format fmt("shader (%1%) compilation error: %2%");
+		std::string message = (fmt % glGetString(GL_SHADING_LANGUAGE_VERSION) % str).str();
+		delete[] str;
+
+		throw std::runtime_error(message);
 	}
 
 	return shader;
@@ -104,7 +115,7 @@ void Program::addUniform(const std::string& uniform)
 template <>
 void Program::setUniform<Matrix4<float>>(const std::string& uniform, const Matrix4<float>& val)
 {
-	
+	glUniformMatrix4fv(uniforms[uniform], 1, false, val.data());
 }
 //----------------------------------------------------------------------------------------------------
 

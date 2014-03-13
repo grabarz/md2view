@@ -11,9 +11,9 @@ Camera::Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector
 	: position {pos}
 	, direction {dir}
 	, up {u}
-	, matrix {0.0}
-	, orientation {0.0}
-	, translation {0.0}
+	, matrix {1.0}
+	, orientation {1.0}
+	, translation {1.0}
 {
 	
 }
@@ -48,7 +48,7 @@ void Camera::updateMatrix()
 	translation[At<4>(1, 3)] = -position[1];
 	translation[At<4>(2, 3)] = -position[2];
 
-	// M orientation {
+	// Matrix4<float> orientation {
 	// 	xAxis[0], yAxis[0], zAxis[0], 0.0,
 	// 	xAxis[1], yAxis[1], zAxis[1], 0.0,
 	// 	xAxis[2], yAxis[2], zAxis[2], 0.0,
@@ -67,6 +67,7 @@ void Camera::updateMatrix()
 	orientation[At<4>(2, 2)] = zAxis[2];
 
 	matrix = Matrix4<float>::multiply(translation, orientation);
+//	matrix = Matrix4<float>::multiply(orientation, translation);
 }
 //----------------------------------------------------------------------------------------------------
 

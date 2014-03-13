@@ -21,7 +21,7 @@ Renderer::Renderer()
 void Renderer::initProgram(Program& prog)
 {
 	prog.load();
-	prog.addUniform("mvp");
+	prog.addUniform("perspectiveMatrix");
 	prog.unload();
 }
 //----------------------------------------------------------------------------------------------------
@@ -30,26 +30,38 @@ void Renderer::load(const std::string& name, const MD2& md2)
 {
 	ModelPtr model {new Model};
 
-	for (const auto& frame : md2.frames)
+	model->frames.reserve(md2.frames);
+
+	// creating buffer
+	GLuint buff;
+
+	glGenBuffers(1, &buff);
+	glBindBuffer(GL_ARRAY_BUFFER, buff);
+	glBufferData(GL_ARRAY_BUFFER, md2.data.size(), md2.data.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	std::size_t normalsOffset = sizeof(float) * 3 * md2.triangles;
+
+	for (int i = 0; i < md2.frames; ++i)
 	{
-		GLuint vbuff, nbuff;
+		// creating VAO
+		Frame frame;
 
-		glGenBuffers(1, &vbuff);
-		glBindBuffer(GL_ARRAY_BUFFER, vbuff);
-		glBufferData(GL_ARRAY_BUFFER, frame.vertices.size(), frame.vertices.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		frame.triangles = md2.triangles;
 
-		glGenBuffers(1, &nbuff);
-		glBindBuffer(GL_ARRAY_BUFFER, nbuff);
-		glBufferData(GL_ARRAY_BUFFER, frame.normals.size(), frame.normals.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glGenVertexArrays(1, &frame.vao);
+		glBindVertexArray(frame.vao);
 
-		Frame f;
+		glBindBuffer(GL_ARRAY_BUFFER, buff);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 
-		f.vao = 0;
-		f.size = frame.vertices.size();
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // position		
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *)normalsOffset); // normal
 
-		model->frames.push_back(f);
+		glBindVertexArray(0);
+
+		model->frames.push_back(frame);
 	}
 
 	models[name] = model;
@@ -69,7 +81,7 @@ ModelPtr Renderer::getModel(const std::string& name)
 
 void Renderer::begin()
 {
-	glClearColor(1,0,0,0);
+	glClearColor(8, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //----------------------------------------------------------------------------------------------------
@@ -77,8 +89,12 @@ void Renderer::begin()
 void Renderer::render(Program& prog, const Matrix4<float>& mat, const Frame& frame)
 {
 	prog.load();
-	prog.setUniform("mvp", mat);
-	// draw
+
+	glBindVertexArray(frame.vao);
+	prog.setUniform("perspectiveMatrix", mat);
+	glDrawArrays(GL_TRIANGLES, 0, frame.triangles);
+	glBindVertexArray(0);
+
 	prog.unload();
 }
 //----------------------------------------------------------------------------------------------------

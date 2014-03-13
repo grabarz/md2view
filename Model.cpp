@@ -14,6 +14,7 @@ void Object::update(double dt)
 
 const Frame& Object::getFrame()
 {
+	return model->frames[0];
 }
 //----------------------------------------------------------------------------------------------------
 
