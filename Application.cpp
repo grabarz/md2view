@@ -3,7 +3,6 @@
 #include "Application.hpp"
 
 #include <exception>
-#include <iostream>
 
 #include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
@@ -26,9 +25,7 @@ std::string getDefaultVertexShader()
 
 		"\nvoid main()"
 		"\n{"
-//		"\n	gl_Normal = perspectiveMatrix * normal;"
 		"\n	gl_Position = perspectiveMatrix * position;"
-//		"\n	gl_Position = vec4(0.0, 0.0,0.0,1.0);"
 		"\n}";
 }
 //----------------------------------------------------------------------------------------------------
@@ -63,8 +60,8 @@ ApplicationContext::ApplicationContext()
 Application::Application(const ApplicationContext& ctx)
 	: context {ctx}
 	, window {nullptr, SDL_DestroyWindow}
-	, camera {{90.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}}
-	, frustum {100.0, 100.0, 0.005, 250.0}
+	, camera {{-70.0, 0.0, -70.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 0.0}}
+	, frustum {60.0, 40.0, 20.0, 175.0}
 	, mvpMatrix {1.0}
 {
 	
@@ -153,21 +150,14 @@ void Application::integrate()
 	frustum.update(dt);
 	object.update(dt);
 
-// 	std::cout << "camera:" << std::endl << camera.getMatrix() << std::endl;
-// 	std::cout << "position:" << camera.position << std::endl;
-// 	std::cout << "direction:" << camera.direction << std::endl;
-// 	std::cout << "up:" << camera.up << std::endl;
-// 	std::cout << "frustum:" << std::endl << frustum.getMatrix() << std::endl;
-	mvpMatrix = Matrix4<float>::multiply(camera.getMatrix(), frustum.getMatrix());
-//	mvpMatrix = Matrix4<float>::multiply(frustum.getMatrix(), camera.getMatrix());
-// 	std::cout << "mvp:" << std::endl << mvpMatrix << std::endl;
+	mvpMatrix = Matrix4<float>::multiply(frustum.getMatrix(), camera.getMatrix());
 }
 //----------------------------------------------------------------------------------------------------
 
 void Application::display()
 {
 	renderer.begin();
-	renderer.render(*context.program, mvpMatrix, object.getFrame());
+	renderer.render(*context.program, mvpMatrix, *object.model, object.getFrame());
 	renderer.end();
 
 	SDL_GL_SwapWindow(window.get());
@@ -186,6 +176,48 @@ void Application::onKeyDown(SDL_Keycode key)
 	{
 		case SDLK_ESCAPE:
 			breakLoop();
+			break;
+		case SDLK_w:
+			camera.forward();
+			break;
+		case SDLK_s:
+			camera.backward();
+			break;
+		case SDLK_a:
+			camera.strafeLeft();
+			break;
+		case SDLK_d:
+			camera.strafeRight();
+			break;
+		case SDLK_c:
+			camera.moveDown();
+			break;
+		case SDLK_SPACE:
+			camera.moveUp();
+			break;
+		case SDLK_j:
+			frustum.incHeight();
+			break;
+		case SDLK_k:
+			frustum.decHeight();
+			break;
+		case SDLK_h:
+			frustum.incWidth();
+			break;
+		case SDLK_l:
+			frustum.decWidth();
+			break;
+		case SDLK_i:
+			frustum.incFar();
+			break;
+		case SDLK_o:
+			frustum.decFar();
+			break;
+		case SDLK_u:
+			frustum.incNear();
+			break;
+		case SDLK_p:
+			frustum.decNear();
 			break;
 	}
 }

@@ -2,6 +2,7 @@
 
 #include "Renderer.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
 #include "Matrix4.hpp"
@@ -30,38 +31,45 @@ void Renderer::load(const std::string& name, const MD2& md2)
 {
 	ModelPtr model {new Model};
 
-	model->frames.reserve(md2.frames);
+	model->vaos.reserve(md2.frames);
 
-	// creating buffer
+	// creating data buffer
 	GLuint buff;
-
 	glGenBuffers(1, &buff);
 	glBindBuffer(GL_ARRAY_BUFFER, buff);
-	glBufferData(GL_ARRAY_BUFFER, md2.data.size(), md2.data.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, md2.data.size() * sizeof(float), md2.data.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	std::size_t normalsOffset = sizeof(float) * 3 * md2.triangles;
+	// creating indices buffer
+	GLuint indices;
+	glGenBuffers(1, &indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, md2.indices.size() * sizeof(unsigned short), md2.indices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	model->indices = md2.indices.size();
+
+	std::size_t normalsOffset = sizeof(float) * md2.frames * md2.vertices * 3; // !!!!!
 
 	for (int i = 0; i < md2.frames; ++i)
 	{
 		// creating VAO
-		Frame frame;
+		GLuint vao;
+		std::size_t off = i * md2.vertices * 3 * sizeof(float);
 
-		frame.triangles = md2.triangles;
-
-		glGenVertexArrays(1, &frame.vao);
-		glBindVertexArray(frame.vao);
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, buff);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // position		
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *)normalsOffset); // normal
-
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)off); // position		
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *)(normalsOffset + off)); // normal
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+		
 		glBindVertexArray(0);
 
-		model->frames.push_back(frame);
+		model->vaos.push_back(vao);
 	}
 
 	models[name] = model;
@@ -82,17 +90,18 @@ ModelPtr Renderer::getModel(const std::string& name)
 void Renderer::begin()
 {
 	glClearColor(8, 0, 0, 1);
+	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //----------------------------------------------------------------------------------------------------
 
-void Renderer::render(Program& prog, const Matrix4<float>& mat, const Frame& frame)
+void Renderer::render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame)
 {
 	prog.load();
 
-	glBindVertexArray(frame.vao);
+	glBindVertexArray(obj.vaos[frame]);
 	prog.setUniform("perspectiveMatrix", mat);
-	glDrawArrays(GL_TRIANGLES, 0, frame.triangles);
+	glDrawElements(GL_TRIANGLES, obj.indices, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
 
 	prog.unload();

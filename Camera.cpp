@@ -19,6 +19,48 @@ Camera::Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector
 }
 //----------------------------------------------------------------------------------------------------
 
+void Camera::forward()
+{
+	position.inc(direction);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::backward()
+{
+	position.dec(direction);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::strafeLeft()
+{
+	Vector3<float> strafe = Vector3<float>::crossProduct(up, direction);
+
+	strafe.normalize();
+	position.inc(strafe);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::strafeRight()
+{
+	Vector3<float> strafe = Vector3<float>::crossProduct(direction, up);
+
+	strafe.normalize();
+	position.inc(strafe);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::moveUp()
+{
+	position.inc(up);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::moveDown()
+{
+	position.dec(up);
+}
+//----------------------------------------------------------------------------------------------------
+
 void Camera::update(double dt)
 {
 	updateMatrix();
@@ -35,39 +77,31 @@ void Camera::updateMatrix()
 {
 	typedef Vector3<float> V3;
 
-	V3 zAxis(direction);
-	//zAxis.dec(position);
-	zAxis.normalize();
+	V3 viewDir(direction);
+	viewDir.normalize();
 
-	V3 xAxis = V3::crossProduct(up, zAxis);
-	xAxis.normalize();
+	V3 viewSide = V3::crossProduct(viewDir, up);
+	viewSide.normalize();
 
-	V3 yAxis = V3::crossProduct(zAxis, xAxis);
+	V3 viewUp = V3::crossProduct(viewDir, viewSide); // or viewDir * viewSide
 
 	translation[At<4>(0, 3)] = -position[0];
 	translation[At<4>(1, 3)] = -position[1];
 	translation[At<4>(2, 3)] = -position[2];
 
-	// Matrix4<float> orientation {
-	// 	xAxis[0], yAxis[0], zAxis[0], 0.0,
-	// 	xAxis[1], yAxis[1], zAxis[1], 0.0,
-	// 	xAxis[2], yAxis[2], zAxis[2], 0.0,
-	// 	0.0, 0.0, 0.0, 1.0};
+	orientation[At<4>(0, 0)] = viewSide[0];
+	orientation[At<4>(0, 1)] = viewSide[1];
+	orientation[At<4>(0, 2)] = viewSide[2];
 
-	orientation[At<4>(0, 0)] = xAxis[0];
-	orientation[At<4>(1, 0)] = xAxis[1];
-	orientation[At<4>(2, 0)] = xAxis[2];
+	orientation[At<4>(1, 0)] = viewUp[0];
+	orientation[At<4>(1, 1)] = viewUp[1];
+	orientation[At<4>(1, 2)] = viewUp[2];
 
-	orientation[At<4>(0, 1)] = yAxis[0];
-	orientation[At<4>(1, 1)] = yAxis[1];
-	orientation[At<4>(2, 1)] = yAxis[2];
+	orientation[At<4>(2, 0)] = -viewDir[0];
+	orientation[At<4>(2, 1)] = -viewDir[1];
+	orientation[At<4>(2, 2)] = -viewDir[2];
 
-	orientation[At<4>(0, 2)] = zAxis[0];
-	orientation[At<4>(1, 2)] = zAxis[1];
-	orientation[At<4>(2, 2)] = zAxis[2];
-
-	matrix = Matrix4<float>::multiply(translation, orientation);
-//	matrix = Matrix4<float>::multiply(orientation, translation);
+	matrix = Matrix4<float>::multiply(orientation, translation);
 }
 //----------------------------------------------------------------------------------------------------
 

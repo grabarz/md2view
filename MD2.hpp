@@ -21,8 +21,10 @@ std::istream& operator>>(std::istream& stream, MD2& m);
 
 struct MD2
 {
-	std::vector<float> data; // vertices, normals
+	std::vector<float> data; // vertices, normals (size = frames * (vertices + normals))
+	std::vector<unsigned short> indices;
 
+	std::size_t vertices;
 	std::size_t triangles;
 	std::size_t frames;
 

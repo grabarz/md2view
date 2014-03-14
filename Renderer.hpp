@@ -28,7 +28,7 @@ public:
 	void end();
 
 	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Frame& frame);
+	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
 
 private:
 	std::map<std::string, ModelPtr> models;

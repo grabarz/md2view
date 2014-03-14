@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <stdexcept>
+#include <iostream>
 //----------------------------------------------------------------------------------------------------
 
 namespace
@@ -102,6 +103,23 @@ std::istream& operator>>(std::istream& stream, MD2& m)
 	if ((header.ident != md2Ident) || (header.version != md2Version))
 		throw std::logic_error("wrong file format!");
 
+	m.indices.clear();
+	m.indices.reserve(header.numTris * 3);
+
+	std::vector<MD2Triangle> triangles(header.numTris, MD2Triangle());
+
+	stream.seekg(header.ofsTris, std::ios::beg);
+	stream.read((char *)triangles.data(), sizeof(MD2Triangle) * header.numTris);
+
+	for (const MD2Triangle& tri : triangles)
+	{
+		m.indices.push_back(tri.vertex[0]);
+		m.indices.push_back(tri.vertex[1]);
+		m.indices.push_back(tri.vertex[2]);
+	}
+
+	m.triangles = header.numTris;
+
 	m.data.clear();
 
 	std::vector<MD2Vertex> buff(header.numVertices, MD2Vertex());
@@ -121,22 +139,18 @@ std::istream& operator>>(std::istream& stream, MD2& m)
 
 		for (MD2Vertex& v: buff)
 		{
-			// std::cout << (frame.scale[0] * v.v[0] + frame.translate[0]) << ", "
-			// 		  << (frame.scale[1] * v.v[1] + frame.translate[1]) << ", "
-			// 		  << (frame.scale[2] * v.v[2] + frame.translate[2]) << std::endl;
-
-			m.data.push_back((frame.scale[0] * v.v[0] + frame.translate[0]) / 1000.0);
-			m.data.push_back((frame.scale[1] * v.v[1] + frame.translate[1]) / 1000.0);
-			m.data.push_back((frame.scale[2] * v.v[2] + frame.translate[2]) / 1000.0);
+			m.data.push_back(frame.scale[0] * v.v[0] + frame.translate[0]);
+			m.data.push_back(frame.scale[2] * v.v[2] + frame.translate[2]);
+			m.data.push_back(frame.scale[1] * v.v[1] + frame.translate[1]);
 
 			normals.push_back(anorms[v.normalIdx][0]);
-			normals.push_back(anorms[v.normalIdx][1]);
 			normals.push_back(anorms[v.normalIdx][2]);
+			normals.push_back(anorms[v.normalIdx][1]);
 		}
 	}
 
 	m.data.insert(m.data.end(), normals.begin(), normals.end());
-	m.triangles = header.numTris;
+	m.vertices = header.numVertices;
 	m.frames = header.numFrames;
 
 	stream.seekg(header.ofsEnd, std::ios::beg);

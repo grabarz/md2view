@@ -19,16 +19,10 @@ namespace MD2View
 // Descriptors of loaded objects
 //----------------------------------------------------------------------------------------------------
 
-struct Frame
-{
-	GLuint vao; // VAO
-	GLsizei triangles; // number of triangles
-};
-//----------------------------------------------------------------------------------------------------
-
 struct Model
 {
-	std::vector<Frame> frames;
+	std::vector<GLuint> vaos;
+	GLsizei indices;
 };
 //----------------------------------------------------------------------------------------------------
 
@@ -38,7 +32,7 @@ struct Object
 
 	void update(double dt);
 
-	const Frame& getFrame();
+	std::size_t getFrame() const;
 
 	void play();
 	void pause();

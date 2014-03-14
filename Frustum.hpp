@@ -23,6 +23,18 @@ public:
 	void update(double dt);
 	const Matrix4<float>& getMatrix() const;
 
+	void incFar();
+	void decFar();
+
+	void incNear();
+	void decNear();
+
+	void incWidth();
+	void decWidth();
+
+	void incHeight();
+	void decHeight();
+
 private:
 	void updateMatrix();
 

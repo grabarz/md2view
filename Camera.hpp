@@ -23,6 +23,13 @@ public:
 	void update(double dt);
 	const Matrix4<float>& getMatrix() const;
 
+	void forward();
+	void backward();
+	void strafeLeft();
+	void strafeRight();
+	void moveUp();
+	void moveDown();
+
 	Vector3<float> position;
 	Vector3<float> direction;
 	Vector3<float> up;
