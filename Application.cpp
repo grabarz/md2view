@@ -109,6 +109,8 @@ int Application::execute()
 
 void Application::start()
 {
+	setupKeys();
+
 	context.program->compile();
 
 	renderer.initProgram(*context.program);
@@ -117,6 +119,41 @@ void Application::start()
 	renderer.load("Object", *context.model);
 
 	object.model = renderer.getModel("Object");
+}
+//----------------------------------------------------------------------------------------------------
+
+void Application::setupKeys()
+{
+	keys.addAction(
+		SDLK_ESCAPE, std::bind(&Application::breakLoop, this), "quit from application");
+	keys.addAction(
+		SDLK_w, std::bind(&Camera::forward, std::ref(camera)), "move forward");
+	keys.addAction(
+		SDLK_s, std::bind(&Camera::backward, std::ref(camera)), "move backward");
+	keys.addAction(
+		SDLK_a, std::bind(&Camera::strafeLeft, std::ref(camera)), "strafe left");
+	keys.addAction(
+		SDLK_d, std::bind(&Camera::strafeRight, std::ref(camera)), "strafe right");
+	keys.addAction(
+		SDLK_c, std::bind(&Camera::moveDown, std::ref(camera)), "move down");
+	keys.addAction(
+		SDLK_SPACE, std::bind(&Camera::moveUp, std::ref(camera)), "move up");
+	keys.addAction(
+		SDLK_h, std::bind(&Frustum::incHeight, std::ref(frustum)), "increase height of view");
+	keys.addAction(
+		SDLK_j, std::bind(&Frustum::decHeight, std::ref(frustum)), "decrease height of view");
+	keys.addAction(
+		SDLK_k, std::bind(&Frustum::incWidth, std::ref(frustum)), "increase width of view");
+	keys.addAction(
+		SDLK_l, std::bind(&Frustum::decWidth, std::ref(frustum)), "decrease width of view");
+	keys.addAction(
+		SDLK_u, std::bind(&Frustum::incFar, std::ref(frustum)), "increase far");
+	keys.addAction(
+		SDLK_i, std::bind(&Frustum::decFar, std::ref(frustum)), "decrease far");
+	keys.addAction(
+		SDLK_o, std::bind(&Frustum::incNear, std::ref(frustum)), "increase near");
+	keys.addAction(
+		SDLK_p, std::bind(&Frustum::decNear, std::ref(frustum)), "decrease near");
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -129,10 +166,10 @@ void Application::processInput()
 		switch (event.type)
 		{
 			case SDL_KEYDOWN:
-				onKeyDown(event.key.keysym.sym);
+				keys.processDown(event.key.keysym.sym);
 				break;
 			case SDL_KEYUP:
-				onKeyUp(event.key.keysym.sym);
+				keys.processUp(event.key.keysym.sym);
 				break;
 			case SDL_QUIT:
 				breakLoop();
@@ -167,64 +204,6 @@ void Application::display()
 void Application::breakLoop()
 {
 	running = false;
-}
-//----------------------------------------------------------------------------------------------------
-
-void Application::onKeyDown(SDL_Keycode key)
-{
-	switch (key)
-	{
-		case SDLK_ESCAPE:
-			breakLoop();
-			break;
-		case SDLK_w:
-			camera.forward();
-			break;
-		case SDLK_s:
-			camera.backward();
-			break;
-		case SDLK_a:
-			camera.strafeLeft();
-			break;
-		case SDLK_d:
-			camera.strafeRight();
-			break;
-		case SDLK_c:
-			camera.moveDown();
-			break;
-		case SDLK_SPACE:
-			camera.moveUp();
-			break;
-		case SDLK_j:
-			frustum.incHeight();
-			break;
-		case SDLK_k:
-			frustum.decHeight();
-			break;
-		case SDLK_h:
-			frustum.incWidth();
-			break;
-		case SDLK_l:
-			frustum.decWidth();
-			break;
-		case SDLK_i:
-			frustum.incFar();
-			break;
-		case SDLK_o:
-			frustum.decFar();
-			break;
-		case SDLK_u:
-			frustum.incNear();
-			break;
-		case SDLK_p:
-			frustum.decNear();
-			break;
-	}
-}
-//----------------------------------------------------------------------------------------------------
-
-void Application::onKeyUp(SDL_Keycode key)
-{
 }
 //----------------------------------------------------------------------------------------------------
 

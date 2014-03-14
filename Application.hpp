@@ -11,6 +11,7 @@
 
 #include "Camera.hpp"
 #include "Frustum.hpp"
+#include "KeyManager.hpp"
 #include "MD2_fwd.hpp"
 #include "Program_fwd.hpp"
 #include "Renderer.hpp"
@@ -46,14 +47,13 @@ public:
 
 private:
 	void start();
+	void setupKeys();
 	void processInput();
 	void integrate();
 	void display();
 	void shutdown();
 
 	void breakLoop();
-	void onKeyDown(SDL_Keycode key);
-	void onKeyUp(SDL_Keycode key);
 
 	typedef std::unique_ptr<SDL_Window, void (*)(SDL_Window*)> WindowPtr;
 
@@ -62,6 +62,7 @@ private:
 	ApplicationContext context;
 	bool running {true};
 
+	KeyManager keys;
 	Frustum frustum;
 	Camera camera;
 	Renderer renderer;

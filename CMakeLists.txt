@@ -34,6 +34,7 @@ add_executable (md2view
 	Application.cpp
 	Frustum.cpp
 	Camera.cpp
+	KeyManager.cpp
 	Program.cpp
 	Renderer.cpp
 	MD2.cpp
