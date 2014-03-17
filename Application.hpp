@@ -15,6 +15,7 @@
 #include "MD2_fwd.hpp"
 #include "Program_fwd.hpp"
 #include "Renderer.hpp"
+#include "Timer.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
@@ -62,6 +63,7 @@ private:
 	ApplicationContext context;
 	bool running {true};
 
+	Timer timer;
 	KeyManager keys;
 	Frustum frustum;
 	Camera camera;

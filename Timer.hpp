@@ -1,50 +1,43 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
-#define _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
+#ifndef _TIMER_HPP_A652EE97850A38E089D9DB5989C9DB9B
+#define _TIMER_HPP_A652EE97850A38E089D9DB5989C9DB9B
 //----------------------------------------------------------------------------------------------------
 
-#include "Camera_fwd.hpp"
+#include "Timer_fwd.hpp"
 
-#include "Frustum.hpp"
-#include "Matrix4.hpp"
-#include "Vector3.hpp"
+#include <SDL2/SDL.h>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Camera
+class Timer
 {
 public:
-	Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector3<float>& u);
+	Timer();
 
-	void update(float dt);
-	const Matrix4<float>& getMatrix() const;
+	void resume();
+	void pause();
+	void pauseResume();
 
-	void forward();
-	void backward();
-	void strafeLeft();
-	void strafeRight();
-	void moveUp();
-	void moveDown();
+	float getTime() const;
+	float getDt() const;
 
-	Vector3<float> position;
-	Vector3<float> direction;
-	Vector3<float> up;
+	void update();
 
 private:
-	void updateMatrix();
+	Uint32 startTime {0};
+	Uint32 currentTime {0};
+	Uint32 currentDt {0};
 
-	Matrix4<float> matrix;
-	Matrix4<float> orientation;
-	Matrix4<float> translation;
+	bool paused {true};
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _CAMERA_HPP_1774D639DF07DBB517B6769EFEF06875
+#endif // _TIMER_HPP_A652EE97850A38E089D9DB5989C9DB9B
 //----------------------------------------------------------------------------------------------------

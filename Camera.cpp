@@ -61,7 +61,7 @@ void Camera::moveDown()
 }
 //----------------------------------------------------------------------------------------------------
 
-void Camera::update(double dt)
+void Camera::update(float dt)
 {
 	updateMatrix();
 }

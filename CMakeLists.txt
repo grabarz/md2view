@@ -38,7 +38,8 @@ add_executable (md2view
 	Program.cpp
 	Renderer.cpp
 	MD2.cpp
-	Model.cpp)
+	Model.cpp
+	Timer.cpp)
 
 target_link_libraries (md2view
 	${Boost_SYSTEM_LIBRARY}

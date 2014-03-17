@@ -20,7 +20,7 @@ public:
 	Frustum(float width, float height, float n, float f);
 	Frustum();
 
-	void update(double dt);
+	void update(float dt);
 	const Matrix4<float>& getMatrix() const;
 
 	void incFar();

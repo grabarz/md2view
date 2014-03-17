@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <map>
+#include <ostream>
 #include <string>
 
 #include <SDL2/SDL.h>
@@ -30,7 +31,7 @@ public:
 	void processDown(SDL_Keycode key);
 	void processUp(SDL_Keycode key);
 
-	std::string helpMessage();
+	friend std::ostream& operator<<(std::ostream& stream, const KeyManager& mngr);
 
 private:
 	struct ActionData
@@ -43,6 +44,9 @@ private:
 
 	std::map<SDL_Keycode, ActionData> keyMap;
 };
+//----------------------------------------------------------------------------------------------------
+
+std::ostream& operator<<(std::ostream& stream, const KeyManager& mngr);
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View

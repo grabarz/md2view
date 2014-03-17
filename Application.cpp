@@ -119,6 +119,8 @@ void Application::start()
 	renderer.load("Object", *context.model);
 
 	object.model = renderer.getModel("Object");
+
+	timer.resume();
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -158,7 +160,6 @@ void Application::setupKeys()
 		SDLK_n, std::bind(&Object::nextFrame, std::ref(object)), "next frame");
 	keys.addAction(
 		SDLK_m, std::bind(&Object::prevFrame, std::ref(object)), "previous frame");
-
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -186,7 +187,7 @@ void Application::processInput()
 
 void Application::integrate()
 {
-	double dt = 0.0;
+	float dt = timer.getDt();
 
 	camera.update(dt);
 	frustum.update(dt);

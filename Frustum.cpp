@@ -91,7 +91,7 @@ void Frustum::decHeight()
 }
 //----------------------------------------------------------------------------------------------------
 
-void Frustum::update(double dt)
+void Frustum::update(float dt)
 {
 	updateMatrix();
 }

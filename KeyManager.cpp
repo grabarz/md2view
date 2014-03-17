@@ -64,9 +64,12 @@ void KeyManager::processUp(SDL_Keycode key)
 }
 //----------------------------------------------------------------------------------------------------
 
-std::string KeyManager::helpMessage()
+std::ostream& operator<<(std::ostream& stream, const KeyManager& mngr)
 {
-	return "help";
+	for (const auto& key : mngr.keyMap)
+	{
+		stream << SDL_GetKeyName(key.first) << " - " << key.second.description << std::endl;
+	}
 }
 //----------------------------------------------------------------------------------------------------
 
