@@ -26,8 +26,9 @@ struct Model
 };
 //----------------------------------------------------------------------------------------------------
 
-struct Object
+class Object
 {
+public:
 	ModelPtr model;
 
 	void update(double dt);
@@ -42,6 +43,10 @@ struct Object
 
 	void nextAnimation();
 	void prevAnimation();
+
+private:
+	std::size_t currentFrame {0};
+	std::size_t currentProgram {0};
 };
 //----------------------------------------------------------------------------------------------------
 

@@ -154,6 +154,11 @@ void Application::setupKeys()
 		SDLK_o, std::bind(&Frustum::incNear, std::ref(frustum)), "increase near");
 	keys.addAction(
 		SDLK_p, std::bind(&Frustum::decNear, std::ref(frustum)), "decrease near");
+	keys.addAction(
+		SDLK_n, std::bind(&Object::nextFrame, std::ref(object)), "next frame");
+	keys.addAction(
+		SDLK_m, std::bind(&Object::prevFrame, std::ref(object)), "previous frame");
+
 }
 //----------------------------------------------------------------------------------------------------
 

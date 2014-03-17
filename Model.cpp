@@ -14,7 +14,7 @@ void Object::update(double dt)
 
 std::size_t Object::getFrame() const
 {
-	return 0;
+	return currentFrame;
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -30,11 +30,17 @@ void Object::pause()
 
 void Object::nextFrame()
 {
+	++currentFrame;
+
+	currentFrame %= model->vaos.size();
 }
 //----------------------------------------------------------------------------------------------------
 
 void Object::prevFrame()
 {
+	currentFrame += model->vaos.size() - 1;
+
+	currentFrame %= model->vaos.size();
 }
 //----------------------------------------------------------------------------------------------------
 
