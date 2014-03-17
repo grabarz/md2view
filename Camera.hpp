@@ -40,6 +40,11 @@ private:
 	Matrix4<float> matrix;
 	Matrix4<float> orientation;
 	Matrix4<float> translation;
+
+	Vector3<float> velocity;
+	Vector3<float> acceleration;
+	float accelerationMax {1.0};
+	float damping {0.3};
 };
 //----------------------------------------------------------------------------------------------------
 

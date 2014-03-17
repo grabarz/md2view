@@ -21,13 +21,13 @@ Camera::Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector
 
 void Camera::forward()
 {
-	position.inc(direction);
+	acceleration.inc(direction);
 }
 //----------------------------------------------------------------------------------------------------
 
 void Camera::backward()
 {
-	position.dec(direction);
+	acceleration.dec(direction);
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ void Camera::strafeLeft()
 	Vector3<float> strafe = Vector3<float>::crossProduct(up, direction);
 
 	strafe.normalize();
-	position.inc(strafe);
+	acceleration.inc(strafe);
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -45,24 +45,29 @@ void Camera::strafeRight()
 	Vector3<float> strafe = Vector3<float>::crossProduct(direction, up);
 
 	strafe.normalize();
-	position.inc(strafe);
+	acceleration.inc(strafe);
 }
 //----------------------------------------------------------------------------------------------------
 
 void Camera::moveUp()
 {
-	position.inc(up);
+	acceleration.inc(up);
 }
 //----------------------------------------------------------------------------------------------------
 
 void Camera::moveDown()
 {
-	position.dec(up);
+	acceleration.dec(up);
 }
 //----------------------------------------------------------------------------------------------------
 
 void Camera::update(float dt)
 {
+	position.inc(velocity, dt);
+	velocity.inc(acceleration, dt);
+	velocity.mul(std::powf(damping, dt));
+	acceleration.mul(0.99);
+
 	updateMatrix();
 }
 //----------------------------------------------------------------------------------------------------
