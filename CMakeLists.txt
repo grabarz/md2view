@@ -53,7 +53,8 @@ add_library (md2view_tests SHARED
 	tests/FloatTests.cpp
 	tests/Vector3Tests.cpp
 	tests/Vector4Tests.cpp
-	tests/Matrix4Tests.cpp)
+	tests/Matrix4Tests.cpp
+	tests/QuaternionTests.cpp)
 
 target_link_libraries (md2view_tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
