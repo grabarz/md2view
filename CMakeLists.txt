@@ -53,6 +53,7 @@ add_library (md2view_tests SHARED
 	tests/FloatTests.cpp
 	tests/Vector3Tests.cpp
 	tests/Vector4Tests.cpp
+	tests/Matrix3Tests.cpp
 	tests/Matrix4Tests.cpp
 	tests/QuaternionTests.cpp)
 
