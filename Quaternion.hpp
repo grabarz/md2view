@@ -6,6 +6,9 @@
 
 #include "Quaternion_fwd.hpp"
 
+#include <cmath>
+
+#include "Matrix3.hpp"
 #include "Vector3.hpp"
 #include "Vector4.hpp"
 //----------------------------------------------------------------------------------------------------
@@ -15,130 +18,139 @@ namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
 template <typename T>
-class Quaternion
+struct Quaternion
 {
-	T data[4];
+	T x;
+	T y;
+	T z;
+	T w;
 
-public:
 	typedef T scalar_type;
 
 	Quaternion() noexcept
 	{
-		data[0] = data[1] = data[2] = data[3] = {};
+		x = y = z = w = {};
+	}
+
+	Quaternion(const Quaternion<T>& q) noexcept
+	{
+		*this = q;
 	}
 
 	Quaternion(T x, T y, T z, T w) noexcept
-	{
-		data[0] = x;
-		data[1] = y;
-		data[2] = z;
-		data[3] = w;
-	}
+		: x {x}
+		, y {y}
+		, z {z}
+		, w {w}
+	{ }
 
-	Quaternion(const Vector4<T>& v) noexcept
+	Quaternion(const Vector3<T>& v, T angle) noexcept
 	{
-		data[0] = v[0];
-		data[1] = v[1];
-		data[2] = v[2];
-		data[3] = v[3];
+		const T h = angle / 2.0;
+		const T s = std::sin(h);
+
+		x = v[0] * s;
+		y = v[1] * s;
+		z = v[2] * s;
+		w = std::cos(h);
 	}
 
 	Quaternion<T>& operator=(const Quaternion<T>& q) noexcept
 	{
-		data[0] = q.data[0];
-		data[1] = q.data[1];
-		data[2] = q.data[2];
-		data[3] = q.data[3];
+		x = q.x;
+		y = q.y;
+		z = q.z;
+		w = q.w;
 
 		return *this;
 	}
 
 	Quaternion<T>& operator=(const Vector4<T>& v) noexcept
 	{
-		data[0] = v[0];
-		data[1] = v[1];
-		data[2] = v[2];
-		data[3] = v[3];
+		x = v[0];
+		y = v[1];
+		z = v[2];
+		w = v[3];
 
 		return *this;
 	}
 
 	T* get() noexcept
 	{
-		return &data[0];
+		return &x;
 	}
 
 	const T* get() const noexcept
 	{
-		return &data[0];
+		return &x;
 	}
 
 	T& operator[](std::size_t i) noexcept
 	{
-		return data[i];
+		return *(&x + i);
 	}
 
 	T operator[](std::size_t i) const noexcept
 	{
-		return data[i];
+		return *(&x + i);
 	}
 
 	Quaternion<T>& inc(const Quaternion<T>& q) noexcept
 	{
-		data[0] += q.data[0];
-		data[1] += q.data[1];
-		data[2] += q.data[2];
-		data[3] += q.data[3];
+		x += q.x;
+		y += q.y;
+		z += q.z;
+		w += q.w;
 
 		return *this;
 	}
 
 	Quaternion<T>& inc(const Quaternion<T>& q, T scale) noexcept
 	{
-		data[0] += scale * q.data[0];
-		data[1] += scale * q.data[1];
-		data[2] += scale * q.data[2];
-		data[3] += scale * q.data[3];
+		x += scale * q.x;
+		y += scale * q.y;
+		z += scale * q.z;
+		w += scale * q.w;
 
 		return *this;
 	}
 
 	Quaternion<T>& dec(const Quaternion<T>& q) noexcept
 	{
-		data[0] -= q.data[0];
-		data[1] -= q.data[1];
-		data[2] -= q.data[2];
-		data[3] -= q.data[3];
+		x -= q.x;
+		y -= q.y;
+		z -= q.z;
+		w -= q.w;
 
 		return *this;
 	}
 
 	Quaternion<T>& mul(T a) noexcept
 	{
-		data[0] *= a;
-		data[1] *= a;
-		data[2] *= a;
-		data[3] *= a;
+		x *= a;
+		y *= a;
+		z *= a;
+		w *= a;
 
 		return *this;
 	}
 
-	Vector3<T> mul(const Vector3<T>& v) noexcept
+	Vector3<T> mul(const Vector3<T>& v) const noexcept
 	{
-		T xx = data[0] * data[0];
-		T yy = data[1] * data[1];
-		T zz = data[2] * data[2];
-		T ww = data[3] * data[3];
+		const T xx = x * x;
+		const T yy = y * y;
+		const T zz = z * z;
+		const T ww = w * w;
 
-		T xxzz = xx - zz;
-		T wwyy = ww - yy;
+		const T xxzz = xx - zz;
+		const T wwyy = ww - yy;
 
-		T xw2 = data[0] * data[3] * 2.0;
-		T xy2 = data[0] * data[1] * 2.0;
-		T xz2 = data[0] * data[2] * 2.0;
-		T yw2 = data[1] * data[3] * 2.0;
-		T yz2 = data[1] * data[2] * 2.0;
-		T zw2 = data[2] * data[3] * 2.0;
+		const T xw2 = x * w * 2.0;
+		const T xy2 = x * y * 2.0;
+		const T xz2 = x * z * 2.0;
+		const T yw2 = y * w * 2.0;
+		const T yz2 = y * z * 2.0;
+		const T zw2 = z * w * 2.0;
 
 		return Vector3<T>(
 			(xxzz + wwyy) * v[0] + (xy2 + zw2) * v[1] + (xz2 - yw2) * v[2],
@@ -155,7 +167,7 @@ public:
 
 	T len2() const noexcept
 	{
-		return data[0] * data[0] + data[1] * data[1] + data[2] * data[2] + data[3] * data[3];
+		return x * x + y * y + z * z + w * w;
 	}
 
 	T len() const noexcept
@@ -165,7 +177,7 @@ public:
 
 	Quaternion<T>& len(T l) noexcept
 	{
-		normalize().mul(l);
+		mul(l / len());
 
 		return *this;
 	}
@@ -180,31 +192,67 @@ public:
 		return *this;
 	}
 
-	static Quaternion<T> multiply(const Quaternion<T>& a, const Quaternion<T>& b) noexcept
+	template <typename M = Matrix3<T>>
+	M toMatrix3() const
+	{
+		T wx, wy, wz;
+		T xx, yy, yz;
+		T xy, xz, zz;
+		T x2, y2, z2;
+
+		x2 = x + x;
+		y2 = y + y;
+		z2 = z + z;
+
+		xx = x * x2;
+		xy = x * y2;
+		xz = x * z2;
+
+		yy = y * y2;
+		yz = y * z2;
+		zz = z * z2;
+
+		wx = w * x2;
+		wy = w * y2;
+		wz = w * z2;
+
+		return M(
+			1.0 - (yy + zz),
+			xy - wz,
+			xz + wy,
+			xy + wz,
+			1.0 - (xx + zz),
+			yz - wx,
+			xz - wy,
+			yz + wx,
+			1.0 - (xx + yy));
+	}
+
+ 	static Quaternion<T> multiply(const Quaternion<T>& a, const Quaternion<T>& b) noexcept
 	{
 		return Quaternion<T>(
-			a.data[3] * b.data[0] + a.data[0] * b.data[3] + a.data[1] * b.data[2] - a.data[2] * b.data[1],
-			a.data[3] * b.data[1] + a.data[1] * b.data[3] + a.data[2] * b.data[0] - a.data[0] * b.data[2],
-			a.data[3] * b.data[2] + a.data[2] * b.data[3] + a.data[0] * b.data[1] - a.data[1] * b.data[0],
-			a.data[3] * b.data[3] - a.data[0] * b.data[0] - a.data[1] * b.data[1] - a.data[2] * b.data[2]);
+			a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+			a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z,
+			a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x,
+			a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
 	}
 
 	bool equals(const Quaternion<T>& q) const noexcept
 	{
 		return
-			FloatEqual<T>(data[0], q.data[0])
-			&& FloatEqual<T>(data[1], q.data[1])
-			&& FloatEqual<T>(data[2], q.data[2])
-			&& FloatEqual<T>(data[3], q.data[3]);
+			FloatEqual<T>(x, q.x)
+			&& FloatEqual<T>(y, q.y)
+			&& FloatEqual<T>(z, q.z)
+			&& FloatEqual<T>(w, q.w);
 	}
 
 	bool equals(const Quaternion<T>& q, T eps) const noexcept
 	{
 		return
-			FloatEqual<T>(data[0], q.data[0], eps)
-			&& FloatEqual<T>(data[1], q.data[1], eps)
-			&& FloatEqual<T>(data[2], q.data[2], eps)
-			&& FloatEqual<T>(data[3], q.data[3], eps);
+			FloatEqual<T>(x, q.x, eps)
+			&& FloatEqual<T>(y, q.y, eps)
+			&& FloatEqual<T>(z, q.z, eps)
+			&& FloatEqual<T>(w, q.w, eps);
 	}
 };
 //----------------------------------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <Float.hpp>
+#include <Matrix3.hpp>
 #include <Quaternion.hpp>
 #include <Vector4.hpp>
 //----------------------------------------------------------------------------------------------------
@@ -31,10 +32,10 @@ BOOST_AUTO_TEST_CASE(Constructor_whenParametersPassed_constructsQuaternion)
 
 BOOST_AUTO_TEST_CASE(Constructor_whenVectorPassed_constructsQuaternion)
 {
-	Vector4<float> v {1.0, 2.0, 3.0, 4.0};
-	Quaternion<float> q {v};
+	Vector3<float> v {1.0, 2.0, 3.0};
+	Quaternion<float> q {v, 0.0};
 
-	BOOST_CHECK(q.equals({1.0, 2.0, 3.0, 4.0}));
+	BOOST_CHECK(q.equals({0.0, 0.0, 0.0, 1.0}));
 }
 //----------------------------------------------------------------------------------------------------
 
