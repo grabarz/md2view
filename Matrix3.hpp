@@ -30,7 +30,7 @@ public:
 
 	explicit Matrix3(const T d) noexcept
 	{
-		tab[1] = tab[2] = tab[3] = tab[5] = tab[6] = tab[7] = static_cast<T>(0.0);
+		tab[1] = tab[2] = tab[3] = tab[5] = tab[6] = tab[7] = {};
 		tab[0] = tab[4] = tab[8] = d;
 	}
 
@@ -130,7 +130,7 @@ public:
 		return *this;
 	}
 
-	Matrix3<T, V3>& mul(const T& d) noexcept
+	Matrix3<T, V3>& mul(const T d) noexcept
 	{
 		tab[0] *= d; tab[1] *= d; tab[2] *= d;
 		tab[3] *= d; tab[4] *= d; tab[5] *= d;
@@ -175,7 +175,7 @@ public:
 			&& FloatEqual<T>(tab[8], m.tab[8]);
 	}
 
-	bool equals(const Matrix3<T, V3>& m, const T& eps) const noexcept
+	bool equals(const Matrix3<T, V3>& m, const T eps) const noexcept
 	{
 		return
 			FloatEqual<T>(tab[0], m.tab[0], eps)

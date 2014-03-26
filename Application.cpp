@@ -60,7 +60,7 @@ ApplicationContext::ApplicationContext()
 Application::Application(const ApplicationContext& ctx)
 	: context {ctx}
 	, window {nullptr, SDL_DestroyWindow}
-	, camera {{-70.0, 0.0, -70.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 0.0}}
+	, camera {{70.0, 0.0, 20.0}, {-1.0, 0.0, 1.0}, {0.0, 1.0, 0.0}}
 	, frustum {60.0, 40.0, 20.0, 175.0}
 	, mvpMatrix {1.0}
 {
@@ -132,6 +132,14 @@ void Application::setupKeys()
 		SDLK_w, std::bind(&Camera::forward, std::ref(camera)), "move forward");
 	keys.addAction(
 		SDLK_s, std::bind(&Camera::backward, std::ref(camera)), "move backward");
+	keys.addAction(
+		SDLK_UP, std::bind(&Camera::forward, std::ref(camera)), "move forward");
+	keys.addAction(
+		SDLK_DOWN, std::bind(&Camera::backward, std::ref(camera)), "move backward");
+	keys.addAction(
+		SDLK_LEFT, std::bind(&Camera::rotateLeft, std::ref(camera)), "rotate left");
+	keys.addAction(
+		SDLK_RIGHT, std::bind(&Camera::rotateRight, std::ref(camera)), "rotate right");
 	keys.addAction(
 		SDLK_a, std::bind(&Camera::strafeLeft, std::ref(camera)), "strafe left");
 	keys.addAction(

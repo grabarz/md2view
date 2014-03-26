@@ -18,15 +18,19 @@ namespace MD2View
 class Camera
 {
 public:
-	Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector3<float>& u);
+	Camera(const Vector3<float>& pos, const Vector3<float>& dir, const Vector3<float>& u);
 
 	void update(float dt);
 	const Matrix4<float>& getMatrix() const;
 
 	void forward();
 	void backward();
+	void rotateLeft();
+	void rotateRight();
 	void strafeLeft();
 	void strafeRight();
+	void lookUp();
+	void lookDown();
 	void moveUp();
 	void moveDown();
 
@@ -43,7 +47,6 @@ private:
 
 	Vector3<float> velocity;
 	Vector3<float> acceleration;
-	float accelerationMax {1.0};
 	float damping {0.3};
 };
 //----------------------------------------------------------------------------------------------------

@@ -1,13 +1,18 @@
 //----------------------------------------------------------------------------------------------------
 
 #include "Camera.hpp"
+
+#include <cmath>
+#include <iostream>
+
+#include "Quaternion.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-Camera::Camera(const Vector3<float>& pos, const Vector3<float> dir, const Vector3<float>& u)
+Camera::Camera(const Vector3<float>& pos, const Vector3<float>& dir, const Vector3<float>& u)
 	: position {pos}
 	, direction {dir}
 	, up {u}
@@ -31,6 +36,22 @@ void Camera::backward()
 }
 //----------------------------------------------------------------------------------------------------
 
+void Camera::rotateLeft()
+{
+	Quaternion<float> quat {up, -M_PI / 100.0};
+
+	direction = quat.mul(direction);
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::rotateRight()
+{
+	Quaternion<float> quat {up, M_PI / 100.0};
+
+	direction = quat.mul(direction);
+}
+//----------------------------------------------------------------------------------------------------
+
 void Camera::strafeLeft()
 {
 	Vector3<float> strafe = Vector3<float>::crossProduct(up, direction);
@@ -49,6 +70,16 @@ void Camera::strafeRight()
 }
 //----------------------------------------------------------------------------------------------------
 
+void Camera::lookUp()
+{
+}
+//----------------------------------------------------------------------------------------------------
+
+void Camera::lookDown()
+{
+}
+//----------------------------------------------------------------------------------------------------
+
 void Camera::moveUp()
 {
 	acceleration.inc(up);
@@ -64,9 +95,8 @@ void Camera::moveDown()
 void Camera::update(float dt)
 {
 	position.inc(velocity, dt);
-	velocity.inc(acceleration, dt);
-	velocity.mul(std::powf(damping, dt));
-	acceleration.mul(0.99);
+	velocity.inc(acceleration, dt).mul(std::powf(damping, dt));
+	acceleration.mul(0.9);
 
 	updateMatrix();
 }
