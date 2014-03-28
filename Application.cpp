@@ -7,64 +7,25 @@
 #include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
 
+#include "ApplicationContext.hpp"
 #include "Program.hpp"
-//----------------------------------------------------------------------------------------------------
-
-namespace
-{
-//----------------------------------------------------------------------------------------------------
-
-std::string getDefaultVertexShader()
-{
-	return
-		"\n#version 330"
-		"\nlayout(location = 0) in vec4 position;"
-		"\nlayout(location = 1) in vec4 normal;"
-
-		"\nuniform mat4 perspectiveMatrix;"
-
-		"\nvoid main()"
-		"\n{"
-		"\n	gl_Position = perspectiveMatrix * position;"
-		"\n}";
-}
-//----------------------------------------------------------------------------------------------------
-
-std::string getDefaultFragmentShader()
-{
-	return
-		"\n#version 330"
-
-		"\nout vec4 outColor;"
-
-		"\nvoid main()"
-		"\n{"
-		"\n	outColor = vec4(0.0, 1.0, 0.0, 1.0);"
-		"\n}";
-}
-//----------------------------------------------------------------------------------------------------
-
-} // namespace
+#include "Shaders.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-ApplicationContext::ApplicationContext()
-	: program {new Program {getDefaultVertexShader(), getDefaultFragmentShader()}}
-{
-}
-//----------------------------------------------------------------------------------------------------
-
-Application::Application(const ApplicationContext& ctx)
+Application::Application(const ApplicationContextPtr& ctx)
 	: context {ctx}
 	, window {nullptr, SDL_DestroyWindow}
 	, camera {{70.0, 0.0, 20.0}, {-1.0, 0.0, 1.0}, {0.0, 1.0, 0.0}}
-	, frustum {60.0, 40.0, 20.0, 175.0}
+	, frustum {40.0, 40.0, 20.0, 175.0}
+	, object {programs, models}
 	, mvpMatrix {1.0}
 {
-	
+	programs.reserve(context->shaders.size());
+	models.reserve(context->models.size());
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -80,7 +41,7 @@ void Application::init()
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 	window.reset(SDL_CreateWindow("md2view", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			context.width, context.height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN));
+			context->width, context->height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN));
 
 	if (window == nullptr)
 		throw std::runtime_error("creating window failed!");
@@ -111,14 +72,19 @@ void Application::start()
 {
 	setupKeys();
 
-	context.program->compile();
+	for (auto& sh: context->shaders)
+	{
+		ProgramPtr prog {new Program{sh.first, sh.second}};
 
-	renderer.initProgram(*context.program);
+		prog->compile();
+		renderer.initProgram(*prog);
+		programs.push_back(prog);
+	}
 
-	// load objects
-	renderer.load("Object", *context.model);
+	for (auto& model: context->models)
+		models.push_back(renderer.load(*model));
 
-	object.model = renderer.getModel("Object");
+	context.reset(); // we dont need context anymore
 
 	timer.resume();
 }
@@ -168,6 +134,10 @@ void Application::setupKeys()
 		SDLK_n, std::bind(&Object::nextFrame, std::ref(object)), "next frame");
 	keys.addAction(
 		SDLK_m, std::bind(&Object::prevFrame, std::ref(object)), "previous frame");
+	keys.addAction(
+		SDLK_z, std::bind(&Object::nextModel, std::ref(object)), "next model");	
+	keys.addAction(
+		SDLK_x, std::bind(&Object::nextProgram, std::ref(object)), "next program");
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -208,7 +178,7 @@ void Application::integrate()
 void Application::display()
 {
 	renderer.begin();
-	renderer.render(*context.program, mvpMatrix, *object.model, object.getFrame());
+	renderer.render(object.getProgram(), mvpMatrix, object.getModel(), 0);
 	renderer.end();
 
 	SDL_GL_SwapWindow(window.get());

@@ -1,38 +1,52 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
-#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#ifndef _OBJECT_HPP_4148D8CEBCD4CFB2B8315161727493E7
+#define _OBJECT_HPP_4148D8CEBCD4CFB2B8315161727493E7
 //----------------------------------------------------------------------------------------------------
 
-#include "Renderer_fwd.hpp"
+#include "Object_fwd.hpp"
 
-#include "Matrix4_fwd.hpp"
-#include "MD2_fwd.hpp"
-#include "Model.hpp"
-#include "Program.hpp"
+#include <vector>
+
+#include "Iterator.hpp"
+#include "Model_fwd.hpp"
+#include "Program_fwd.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Renderer
+class Object
 {
 public:
-	Renderer();
+	Object(std::vector<ProgramPtr>& progs, std::vector<ModelPtr>& mods);
 
-	ModelPtr load(const MD2& md2);
+	void update(float dt);
 
-	void begin();
-	void end();
+	void play();
+	void pause();
 
-	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
+	void nextFrame();
+	void prevFrame();
+
+	void nextAnimation();
+	void prevAnimation();
+
+	void nextModel();
+	void nextProgram();
+
+	Program& getProgram();
+	Model& getModel();
+
+private:
+	Iterator<ProgramPtr> program;
+	Iterator<ModelPtr> model;
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#endif // _OBJECT_HPP_4148D8CEBCD4CFB2B8315161727493E7
 //----------------------------------------------------------------------------------------------------

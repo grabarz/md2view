@@ -1,28 +1,64 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _MD2_FWD_HPP_9F4D752661DF848D9324144425348C68
-#define _MD2_FWD_HPP_9F4D752661DF848D9324144425348C68
+#include "Shaders.hpp"
+
+#include "Program.hpp"
 //----------------------------------------------------------------------------------------------------
 
-#include <memory>
-#include <vector>
+namespace
+{
+//----------------------------------------------------------------------------------------------------
+
+std::string getDefaultVertexShader()
+{
+	return
+		"\n#version 330"
+		"\nlayout(location = 0) in vec4 position;"
+		"\nlayout(location = 1) in vec4 normal;"
+
+		"\nsmooth out vec4 theColor;"
+
+		"\nuniform mat4 perspectiveMatrix;"
+
+		"\nvoid main()"
+		"\n{"
+		"\n	theColor = position;"
+		"\n	gl_Position = perspectiveMatrix * position;"
+		"\n}";
+}
+//----------------------------------------------------------------------------------------------------
+
+std::string getDefaultFragmentShader()
+{
+	return
+		"\n#version 330"
+
+		"\nsmooth in vec4 theColor;"
+		"\nout vec4 outColor;"
+
+		"\nvoid main()"
+		"\n{"
+		"\n	outColor = vec4(abs(theColor.x), abs(theColor.y), abs(theColor.z), 1.0);"
+		"\n}";
+}
+//----------------------------------------------------------------------------------------------------
+
+} // namespace
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-struct MD2;
-//----------------------------------------------------------------------------------------------------
+ShadersVector getShaders() noexcept
+{
+	ShadersVector shaders;
 
-typedef std::shared_ptr<MD2> MD2Ptr;
-//----------------------------------------------------------------------------------------------------
+	shaders.emplace_back(Shaders {getDefaultVertexShader(), getDefaultFragmentShader()});
 
-typedef std::vector<MD2Ptr> MD2Vector;
+	return shaders;
+}
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
-//----------------------------------------------------------------------------------------------------
-
-#endif // _MD2_FWD_HPP_9F4D752661DF848D9324144425348C68
 //----------------------------------------------------------------------------------------------------

@@ -27,7 +27,7 @@ void Renderer::initProgram(Program& prog)
 }
 //----------------------------------------------------------------------------------------------------
 
-void Renderer::load(const std::string& name, const MD2& md2)
+ModelPtr Renderer::load(const MD2& md2)
 {
 	ModelPtr model {new Model};
 
@@ -72,18 +72,7 @@ void Renderer::load(const std::string& name, const MD2& md2)
 		model->vaos.push_back(vao);
 	}
 
-	models[name] = model;
-}
-//----------------------------------------------------------------------------------------------------
-
-ModelPtr Renderer::getModel(const std::string& name)
-{
-	std::map<std::string, ModelPtr>::iterator it = models.find(name);
-
-	if (it == models.end())
-		throw std::runtime_error("unable to load model!");
-
-	return it->second;
+	return model;
 }
 //----------------------------------------------------------------------------------------------------
 

@@ -1,38 +1,37 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
-#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#ifndef _APPLICATIONCONTEXT_HPP_78ED18D6CE4F12CE4931BB01F77DB785
+#define _APPLICATIONCONTEXT_HPP_78ED18D6CE4F12CE4931BB01F77DB785
 //----------------------------------------------------------------------------------------------------
 
-#include "Renderer_fwd.hpp"
+#include "ApplicationContext_fwd.hpp"
 
-#include "Matrix4_fwd.hpp"
 #include "MD2_fwd.hpp"
-#include "Model.hpp"
-#include "Program.hpp"
+#include "Shaders_fwd.hpp"
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Renderer
+struct ApplicationContext
 {
-public:
-	Renderer();
+	typedef unsigned int Pixels;
 
-	ModelPtr load(const MD2& md2);
+	Pixels width;
+	Pixels height;
 
-	void begin();
-	void end();
+	ShadersVector shaders;
+	MD2Vector models;
 
-	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
+	// texture
+
+	ApplicationContext();
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#endif // _APPLICATIONCONTEXT_HPP_78ED18D6CE4F12CE4931BB01F77DB785
 //----------------------------------------------------------------------------------------------------

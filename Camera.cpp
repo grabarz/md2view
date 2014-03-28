@@ -3,7 +3,6 @@
 #include "Camera.hpp"
 
 #include <cmath>
-#include <iostream>
 
 #include "Quaternion.hpp"
 //----------------------------------------------------------------------------------------------------

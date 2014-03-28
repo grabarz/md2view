@@ -1,38 +1,27 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
-#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#ifndef _SHADERS_FWD_HPP_BAF3F2F8916054E576C92E7419551427
+#define _SHADERS_FWD_HPP_BAF3F2F8916054E576C92E7419551427
 //----------------------------------------------------------------------------------------------------
 
-#include "Renderer_fwd.hpp"
-
-#include "Matrix4_fwd.hpp"
-#include "MD2_fwd.hpp"
-#include "Model.hpp"
-#include "Program.hpp"
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Renderer
-{
-public:
-	Renderer();
+typedef std::pair<std::string, std::string> Shaders;
+//----------------------------------------------------------------------------------------------------
 
-	ModelPtr load(const MD2& md2);
-
-	void begin();
-	void end();
-
-	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
-};
+typedef std::vector<Shaders> ShadersVector;
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#endif // _SHADERS_FWD_HPP_BAF3F2F8916054E576C92E7419551427
 //----------------------------------------------------------------------------------------------------

@@ -1,38 +1,24 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
-#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#ifndef _APPLICATIONCONTEXT_FWD_HPP_637783EDDACB252FC3D75803C42EF951
+#define _APPLICATIONCONTEXT_FWD_HPP_637783EDDACB252FC3D75803C42EF951
 //----------------------------------------------------------------------------------------------------
 
-#include "Renderer_fwd.hpp"
-
-#include "Matrix4_fwd.hpp"
-#include "MD2_fwd.hpp"
-#include "Model.hpp"
-#include "Program.hpp"
+#include <memory>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Renderer
-{
-public:
-	Renderer();
+struct ApplicationContext;
+//----------------------------------------------------------------------------------------------------
 
-	ModelPtr load(const MD2& md2);
-
-	void begin();
-	void end();
-
-	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
-};
+typedef std::shared_ptr<ApplicationContext> ApplicationContextPtr;
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#endif // _APPLICATIONCONTEXT_FWD_HPP_637783EDDACB252FC3D75803C42EF951
 //----------------------------------------------------------------------------------------------------

@@ -1,38 +1,66 @@
 //----------------------------------------------------------------------------------------------------
 
-#ifndef _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
-#define _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#ifndef _ITERATOR_HPP_2868DEF94E970249751211C4DEC0876F
+#define _ITERATOR_HPP_2868DEF94E970249751211C4DEC0876F
 //----------------------------------------------------------------------------------------------------
 
-#include "Renderer_fwd.hpp"
-
-#include "Matrix4_fwd.hpp"
-#include "MD2_fwd.hpp"
-#include "Model.hpp"
-#include "Program.hpp"
+#include <vector>
 //----------------------------------------------------------------------------------------------------
 
 namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-class Renderer
+template <typename T>
+class Iterator
 {
 public:
-	Renderer();
+	Iterator(std::vector<T>& v)
+		: vector {v}
+		, _position {0}
+	{
+	}
 
-	ModelPtr load(const MD2& md2);
+	void next()
+	{
+		++_position;
+		_position %= vector.size();
+	}
 
-	void begin();
-	void end();
+	void prev()
+	{
+		_position += vector.size() - 1;
+		_position %= vector.size();
+	}
 
-	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
+	bool empty() const
+	{
+		return vector.empty();
+	}
+
+	const T& get() const
+	{
+		return vector[_position];
+	}
+
+	T& get()
+	{
+		return vector[_position];
+	}
+
+	std::size_t position() const
+	{
+		return _position;
+	}
+
+private:
+	std::vector<T>& vector;
+	std::size_t _position;
 };
 //----------------------------------------------------------------------------------------------------
 
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 
-#endif // _RENDERER_HPP_2557FE3F410C8F39795FD533541879FE
+#endif // _ITERATOR_HPP_2868DEF94E970249751211C4DEC0876F
 //----------------------------------------------------------------------------------------------------

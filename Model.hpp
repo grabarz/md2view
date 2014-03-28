@@ -26,33 +26,6 @@ struct Model
 };
 //----------------------------------------------------------------------------------------------------
 
-class Object
-{
-public:
-	ModelPtr model;
-
-	void update(float dt);
-
-	std::size_t getFrame() const;
-
-	void play();
-	void pause();
-
-	void nextFrame();
-	void prevFrame();
-
-	void nextAnimation();
-	void prevAnimation();
-
-private:
-	std::size_t currentFrame {0};
-	std::size_t currentProgram {0};
-};
-//----------------------------------------------------------------------------------------------------
-
-
-//----------------------------------------------------------------------------------------------------
-
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------
 

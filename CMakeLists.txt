@@ -32,13 +32,15 @@ link_directories(/usr/local/lib)
 add_executable (md2view
 	main.cpp
 	Application.cpp
-	Frustum.cpp
+	ApplicationContext.cpp
 	Camera.cpp
+	Frustum.cpp
 	KeyManager.cpp
+	MD2.cpp
+	Object.cpp
 	Program.cpp
 	Renderer.cpp
-	MD2.cpp
-	Model.cpp
+	Shaders.cpp
 	Timer.cpp)
 
 target_link_libraries (md2view

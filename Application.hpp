@@ -5,14 +5,16 @@
 //----------------------------------------------------------------------------------------------------
 
 #include <memory>
-#include <string>
+#include <vector>
 
 #include <SDL2/SDL.h>
 
+#include "ApplicationContext_fwd.hpp"
 #include "Camera.hpp"
 #include "Frustum.hpp"
 #include "KeyManager.hpp"
-#include "MD2_fwd.hpp"
+#include "Model_fwd.hpp"
+#include "Object.hpp"
 #include "Program_fwd.hpp"
 #include "Renderer.hpp"
 #include "Timer.hpp"
@@ -22,26 +24,10 @@ namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-struct ApplicationContext
-{
-	typedef unsigned int Pixels;
-
-	Pixels width;
-	Pixels height;
-
-	ProgramPtr program;
-	MD2Ptr model;
-
-	// texture
-
-	ApplicationContext();
-};
-//----------------------------------------------------------------------------------------------------
-
 class Application
 {
 public:
-	Application(const ApplicationContext& ctx);
+	Application(const ApplicationContextPtr& ctx);
 
 	void init();
 	int execute();
@@ -60,7 +46,7 @@ private:
 
 	WindowPtr window;
 	SDL_GLContext glContext;
-	ApplicationContext context;
+	ApplicationContextPtr context;
 	bool running {true};
 
 	Timer timer;
@@ -68,6 +54,9 @@ private:
 	Frustum frustum;
 	Camera camera;
 	Renderer renderer;
+
+	std::vector<ProgramPtr> programs;
+	std::vector<ModelPtr> models;
 
 	Object object;
 	Matrix4<float> mvpMatrix;
