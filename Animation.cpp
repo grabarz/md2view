@@ -83,7 +83,7 @@ void Animator::update(float dt)
 		float a = time / animation->frameDuration;
 		float f = std::floor(a);
 		currentFrame = animation->firstFrame + static_cast<int>(f);
-		scale = 0.1; // needs some fixes
+		scale = a - f;
 	}
 }
 //----------------------------------------------------------------------------------------------------

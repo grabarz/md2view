@@ -16,6 +16,7 @@ std::string getDefaultVertexShader()
 		"\nlayout(location = 0) in vec4 position;"
 		"\nlayout(location = 1) in vec4 nextPosition;"
 		"\nlayout(location = 2) in vec4 normal;"
+		"\nlayout(location = 3) in vec4 nextNormal;"
 
 		"\nuniform mat4 perspectiveMatrix;"
 		"\nuniform float scale;"
@@ -48,6 +49,7 @@ std::string getFirstVertexShader()
 		"\nlayout(location = 0) in vec4 position;"
 		"\nlayout(location = 1) in vec4 nextPosition;"
 		"\nlayout(location = 2) in vec4 normal;"
+		"\nlayout(location = 3) in vec4 nextNormal;"
 
 		"\nsmooth out vec4 theColor;"
 //		"\nsmooth out vec4 theNormal;"
@@ -57,7 +59,7 @@ std::string getFirstVertexShader()
 
 		"\nvoid main()"
 		"\n{"
-		"\n	theColor = normal;"
+		"\n	theColor = mix(normal, nextNormal, scale);"
 //		"\n	theNormal = normal;"
 		"\n	gl_Position = perspectiveMatrix * mix(position, nextPosition, scale);"
 		"\n}";

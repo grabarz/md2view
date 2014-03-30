@@ -62,7 +62,7 @@ ModelPtr Renderer::load(const MD2& md2, const AnimationVector& anims)
 		// creating VAO
 		GLuint vao;
 		std::size_t off = i * md2.vertices * 3 * sizeof(float);
-		std::size_t nextOff = (i == anims[animation].lastFrame ? anims[animation].firstFrame : i) * md2.vertices * 3 * sizeof(float);
+		std::size_t nextOff = (i == anims[animation].lastFrame ? anims[animation].firstFrame : i + 1) * md2.vertices * 3 * sizeof(float);
 
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
