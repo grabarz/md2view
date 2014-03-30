@@ -31,7 +31,7 @@ std::vector<MD2View::MD2Ptr> readModels(const std::vector<std::string>& files)
 
 	for (const std::string& file: files)
 	{
-		MD2Ptr md2 {new MD2()};
+		MD2Ptr md2 = std::make_shared<MD2>();
 
 		md2stream.open(file);
 		if (!md2stream.is_open())
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 
 	try
 	{
-		MD2View::ApplicationContextPtr ctx {new MD2View::ApplicationContext()};
+		MD2View::ApplicationContextPtr ctx = std::make_shared<MD2View::ApplicationContext>();
 
 		if (vm.count("input-files"))
 			ctx->models = readModels(vm["input-files"].as<std::vector<std::string>>());

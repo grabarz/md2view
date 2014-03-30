@@ -9,6 +9,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "Animation.hpp"
 #include "ApplicationContext_fwd.hpp"
 #include "Camera.hpp"
 #include "Frustum.hpp"
@@ -55,8 +56,9 @@ private:
 	Camera camera;
 	Renderer renderer;
 
-	std::vector<ProgramPtr> programs;
-	std::vector<ModelPtr> models;
+	ProgramVector programs;
+	ModelVector models;
+	AnimationVector animations;
 
 	Object object;
 	Matrix4<float> mvpMatrix;

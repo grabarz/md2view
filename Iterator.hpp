@@ -11,41 +11,69 @@ namespace MD2View
 {
 //----------------------------------------------------------------------------------------------------
 
-template <typename T>
+template <typename T, typename V = std::vector<T>>
 class Iterator
 {
 public:
-	Iterator(std::vector<T>& v)
-		: vector {v}
+	Iterator(V& v)
+		: vector {&v}
 		, _position {0}
 	{
 	}
 
-	void next()
+	Iterator<T, V>& operator++()
 	{
 		++_position;
-		_position %= vector.size();
+		_position %= vector->size();
+
+		return *this;
 	}
 
-	void prev()
+	Iterator<T, V>& operator++(int)
 	{
-		_position += vector.size() - 1;
-		_position %= vector.size();
+		++*this;
+
+		return *this;
+	}
+
+	Iterator<T, V>& operator--()
+	{
+		_position += vector->size() - 1;
+		_position %= vector->size();
+
+		return *this;
+	}
+
+	Iterator<T, V>& operator--(int)
+	{
+		--*this;
+
+		return *this;
 	}
 
 	bool empty() const
 	{
-		return vector.empty();
+		return vector->empty();
 	}
 
-	const T& get() const
+	T& operator*() const
 	{
-		return vector[_position];
+		return (*vector)[_position];
 	}
 
-	T& get()
+	T& operator*()
 	{
-		return vector[_position];
+		return (*vector)[_position];
+	}
+
+	const T& operator->() const
+	{
+		return (*vector)[_position];
+	}
+
+	T& operator->()
+	{
+		return (*vector)[_position];
 	}
 
 	std::size_t position() const
@@ -54,7 +82,7 @@ public:
 	}
 
 private:
-	std::vector<T>& vector;
+	V* vector;
 	std::size_t _position;
 };
 //----------------------------------------------------------------------------------------------------

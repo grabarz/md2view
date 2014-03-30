@@ -19,9 +19,10 @@ namespace MD2View
 Application::Application(const ApplicationContextPtr& ctx)
 	: context {ctx}
 	, window {nullptr, SDL_DestroyWindow}
-	, camera {{70.0, 0.0, 20.0}, {-1.0, 0.0, 1.0}, {0.0, 1.0, 0.0}}
+	, camera {{70.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}}
 	, frustum {40.0, 40.0, 20.0, 175.0}
-	, object {programs, models}
+	, animations {getAnimations()}
+	, object {programs, models, animations}
 	, mvpMatrix {1.0}
 {
 	programs.reserve(context->shaders.size());
@@ -74,7 +75,7 @@ void Application::start()
 
 	for (auto& sh: context->shaders)
 	{
-		ProgramPtr prog {new Program{sh.first, sh.second}};
+		ProgramPtr prog = std::make_shared<Program>(sh.first, sh.second);
 
 		prog->compile();
 		renderer.initProgram(*prog);
@@ -82,11 +83,12 @@ void Application::start()
 	}
 
 	for (auto& model: context->models)
-		models.push_back(renderer.load(*model));
+		models.push_back(renderer.load(*model, animations));
 
 	context.reset(); // we dont need context anymore
 
 	timer.resume();
+	renderer.init();
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -131,13 +133,16 @@ void Application::setupKeys()
 	keys.addAction(
 		SDLK_p, std::bind(&Frustum::decNear, std::ref(frustum)), "decrease near");
 	keys.addAction(
-		SDLK_n, std::bind(&Object::nextFrame, std::ref(object)), "next frame");
-	keys.addAction(
-		SDLK_m, std::bind(&Object::prevFrame, std::ref(object)), "previous frame");
-	keys.addAction(
 		SDLK_z, std::bind(&Object::nextModel, std::ref(object)), "next model");	
 	keys.addAction(
 		SDLK_x, std::bind(&Object::nextProgram, std::ref(object)), "next program");
+	keys.addAction(
+		SDLK_v, std::bind(&Object::playPause, std::ref(object)), "start/stop animation");	
+	keys.addAction(
+		SDLK_n, std::bind(&Object::nextAnimation, std::ref(object)), "next animation");	
+	keys.addAction(
+		SDLK_m, std::bind(&Object::prevAnimation, std::ref(object)), "previous animation");
+
 }
 //----------------------------------------------------------------------------------------------------
 
@@ -165,6 +170,8 @@ void Application::processInput()
 
 void Application::integrate()
 {
+	timer.update();
+
 	float dt = timer.getDt();
 
 	camera.update(dt);
@@ -178,7 +185,7 @@ void Application::integrate()
 void Application::display()
 {
 	renderer.begin();
-	renderer.render(object.getProgram(), mvpMatrix, object.getModel(), 0);
+	renderer.render(object.getProgram(), mvpMatrix, object.getScale(), object.getModel(), object.getFrame());
 	renderer.end();
 
 	SDL_GL_SwapWindow(window.get());

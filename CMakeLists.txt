@@ -31,6 +31,7 @@ link_directories(/usr/local/lib)
 
 add_executable (md2view
 	main.cpp
+	Animation.cpp
 	Application.cpp
 	ApplicationContext.cpp
 	Camera.cpp

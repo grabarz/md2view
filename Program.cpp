@@ -119,5 +119,12 @@ void Program::setUniform<Matrix4<float>>(const std::string& uniform, const Matri
 }
 //----------------------------------------------------------------------------------------------------
 
+template <>
+void Program::setUniform<float>(const std::string& uniform, const float& val)
+{
+	glUniform1f(uniforms[uniform], val);
+}
+//----------------------------------------------------------------------------------------------------
+
 } // namespace MD2View
 //----------------------------------------------------------------------------------------------------

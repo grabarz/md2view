@@ -8,6 +8,7 @@
 
 #include <vector>
 
+#include "Animation.hpp"
 #include "Iterator.hpp"
 #include "Model_fwd.hpp"
 #include "Program_fwd.hpp"
@@ -20,12 +21,11 @@ namespace MD2View
 class Object
 {
 public:
-	Object(std::vector<ProgramPtr>& progs, std::vector<ModelPtr>& mods);
+	Object(ProgramVector& progs, ModelVector& mods, AnimationVector& anim);
 
 	void update(float dt);
 
-	void play();
-	void pause();
+	void playPause();
 
 	void nextFrame();
 	void prevFrame();
@@ -36,12 +36,32 @@ public:
 	void nextModel();
 	void nextProgram();
 
-	Program& getProgram();
-	Model& getModel();
+	Program& getProgram()
+	{
+		return **program;
+	}
+
+	Model& getModel()
+	{
+		return **model;
+	}
+
+	int getFrame() const
+	{
+		return animator.getFrame();
+	}
+
+	float getScale() const
+	{
+		return animator.getScale();
+	}
 
 private:
 	Iterator<ProgramPtr> program;
 	Iterator<ModelPtr> model;
+	Iterator<Animation> animation;
+
+	Animator animator;
 };
 //----------------------------------------------------------------------------------------------------
 

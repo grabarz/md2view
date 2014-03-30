@@ -6,6 +6,7 @@
 
 #include "Renderer_fwd.hpp"
 
+#include "Animation_fwd.hpp"
 #include "Matrix4_fwd.hpp"
 #include "MD2_fwd.hpp"
 #include "Model.hpp"
@@ -21,13 +22,15 @@ class Renderer
 public:
 	Renderer();
 
-	ModelPtr load(const MD2& md2);
+	ModelPtr load(const MD2& md2, const AnimationVector& anims);
+
+	void init();
 
 	void begin();
 	void end();
 
 	void initProgram(Program& prog);
-	void render(Program& prog, const Matrix4<float>& mat, const Model& obj, std::size_t frame);
+	void render(Program& prog, const Matrix4<float>& mat, float scale, const Model& obj, std::size_t frame);
 };
 //----------------------------------------------------------------------------------------------------
 

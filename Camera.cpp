@@ -95,7 +95,7 @@ void Camera::update(float dt)
 {
 	position.inc(velocity, dt);
 	velocity.inc(acceleration, dt).mul(std::powf(damping, dt));
-	acceleration.mul(0.9);
+	acceleration.mul(0.92);
 
 	updateMatrix();
 }

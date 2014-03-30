@@ -40,13 +40,13 @@ void Timer::pauseResume()
 
 float Timer::getTime() const
 {
-	return currentTime / 1000.0;
+	return currentTime / 3000.0;
 }
 //----------------------------------------------------------------------------------------------------
 
 float Timer::getDt() const
 {
-	return currentTime / 1000.0;
+	return currentDt / 3000.0;
 }
 //----------------------------------------------------------------------------------------------------
 

@@ -47,7 +47,7 @@ private:
 
 	Vector3<float> velocity;
 	Vector3<float> acceleration;
-	float damping {0.3};
+	float damping {0.4};
 };
 //----------------------------------------------------------------------------------------------------
 
